@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
 import { GoogleIcon } from "./google-icon";
@@ -18,7 +19,7 @@ export const SignInOauthButton = ({
 
     await signIn.social({
       provider,
-      callbackURL: "/profile",
+      callbackURL: "/dashboard",
       errorCallbackURL: "/auth/login/error",
     });
 
