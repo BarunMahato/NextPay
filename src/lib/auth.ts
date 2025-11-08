@@ -1,5 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
+
 import { prisma } from "./prisma";
 import { hashPassword, verifyPassword } from "@/lib/argon2";
 
@@ -25,6 +27,7 @@ export const auth = betterAuth({
     google: {
       clientId: String(process.env.GOOGLE_CLIENT_ID),
       clientSecret: String(process.env.GOOGLE_CLIENT_SECRET),
-    }}
+    }},
+    plugins: [nextCookies()],
 })
 export type ErrorCode = keyof typeof auth.$ERROR_CODES | "UNKNOWN";

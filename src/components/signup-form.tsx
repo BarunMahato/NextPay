@@ -9,22 +9,22 @@ export const SignupForm = () => {
     const router = useRouter();
 
     async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
-    evt.preventDefault();
+      evt.preventDefault();
 
-    setIsPending(true);
+      setIsPending(true);
 
-    const formData = new FormData(evt.currentTarget);
+      const formData = new FormData(evt.currentTarget);
 
-    const { error } = await signUpEmailAction(formData);
+      const { error } = await signUpEmailAction(formData);
 
-    if (error) {
-      toast.error(error);
-      setIsPending(false);
-    } else {
-      toast.success("Login successful. Good to have you back.");
-        router.push("/dashboard");
+      if (error) {
+        toast.error(error);
+        setIsPending(false);
+      } else {
+        toast.success("Login successful. Good to have you on board.");
+          router.push("/auth/login");
+      }
     }
-  }
     return (
          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div>
@@ -56,8 +56,8 @@ export const SignupForm = () => {
               id="email"
               name="email"
               type="email"
-              autoComplete="email"
               required
+              autoComplete="email"
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
               placeholder="you@example.com"
             />
@@ -75,8 +75,8 @@ export const SignupForm = () => {
               id="password"
               name="password"
               type="password"
-              autoComplete="new-password"
               required
+              autoComplete="new-password"
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
               placeholder="••••••••"
             />
