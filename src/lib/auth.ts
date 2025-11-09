@@ -18,6 +18,9 @@ export const auth = betterAuth({
         verify: verifyPassword,
         }
     },
+    session: {
+        expiresIn: 60 * 30,
+    },
     advanced: {
         database: {
         generateId: false,

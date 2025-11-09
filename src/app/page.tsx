@@ -1,3 +1,4 @@
+import { GetStartedButton } from '@/components/get-started-button';
 import Navbar from '@/components/Navbar';
 
 export default function Home() {
@@ -17,14 +18,8 @@ export default function Home() {
           From paying friends to managing your business, we've got you covered.
         </p>
 
-        <div className="mt-10 flex justify-center">
-          <a
-            href="/auth/signup"
-            className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-indigo-700"
-          >
-            Get Started for Free
-          </a>
-        </div>
+        <GetStartedButton />
+        
       </main>
     </div>
   );
