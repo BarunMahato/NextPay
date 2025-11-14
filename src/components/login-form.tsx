@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { signInEmailAction } from "@/app/actions/sign-in-email.action";
+// Updated import path from alias to relative
+import { signInEmailAction } from "../app/actions/sign-in-email.action";
+import Link from "next/link"; // Added for the "Forgot password?" link
 
 export const LoginForm = () => {
     const [isPending, setIsPending] = useState(false);
@@ -46,14 +48,24 @@ export const LoginForm = () => {
                 />
             </div>
 
-            {/* Password Field */}
             <div>
-                <label
-                htmlFor="password" 
-                className="block text-sm font-medium text-gray-700"
-                >
-                Password
-                </label>
+                <div className="flex items-center justify-between">
+                    <label
+                    htmlFor="password" 
+                    className="block text-sm font-medium text-gray-700"
+                    >
+                    Password
+                    </label>
+                    <div className="text-sm">
+                        <Link
+                            href="/auth/forgot-password"
+                            className="font-medium text-blue-600 hover:underline"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+                </div>
+
                 <input
                 id="password"
                 name="password"
@@ -65,7 +77,6 @@ export const LoginForm = () => {
                 />
             </div>
 
-            {/* Submit Button */}
             <div>
                 <button
                 type="submit"

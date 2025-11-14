@@ -21,6 +21,23 @@ export const auth = betterAuth({
         verify: verifyPassword,
         },
         requireEmailVerification: true,
+        sendResetPassword: async ({ user, url }) => {
+        await sendEmailAction({
+            to: user.email,
+            subject: "Action Required: Reset Your NextPay Password",
+            meta: {
+                description: `Hello,
+                <br/><br/>
+                We received a request to reset the password for your NextPay account. If this was you, please click the button below to set a new password.
+                <br/><br/>
+                This password reset link is valid for the next 1 hour.
+                <br/><br/>
+                If you did not request a password reset, please safely ignore this email. Your password will not be changed.`,
+                link: url,
+                linkText: "Reset My Password"
+            },
+        });
+},
     },
     emailVerification:{
         sendOnSignUp: true,

@@ -1,7 +1,6 @@
 "use server"
 import { transporter } from "@/lib/nodemailer";
 
-// Professional styles for email templates
 const styles = {
     container: `font-family: Arial, sans-serif; margin: 40px auto; max-width: 600px; border: 1px solid #e0e0e0; border-radius: 8px; padding: 40px; text-align: center;`,
     heading: `font-size: 28px; color: #333; margin-bottom: 20px;`,
@@ -20,7 +19,7 @@ export async function sendEmailAction({
     meta: {
         description: string;
         link: string;
-        linkText: string; // <-- ADDED THIS PROPERTY
+        linkText: string; 
     };
 }) {
     const mailOptions = {
