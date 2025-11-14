@@ -8,16 +8,13 @@ export const GetStartedButton = () => {
     if (isPending){
         return (
             <div className="mt-10 flex justify-center">
-          <a
-            href="/auth/signup"
-            className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-indigo-700"
-         >
+            <div className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-indigo-700">
             Get Started for Free
-          </a>
+            </div>
         </div>
         )
     }
-    const href = session ? "/dashboard" : "auth/login";
+    const href = session ? "/dashboard" : "auth/signup";
     return (
         <div className="mt-10 flex justify-center">
             <div className="bg-indigo-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-indigo-700">

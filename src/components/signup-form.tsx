@@ -22,7 +22,7 @@ export const SignupForm = () => {
         setIsPending(false);
       } else {
         toast.success("Login successful. Good to have you on board.");
-          router.push("/auth/login");
+          router.push("/auth/signup/success");
       }
     }
     return (
