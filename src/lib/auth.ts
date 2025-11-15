@@ -83,7 +83,43 @@ export const auth = betterAuth({
                     },
                 };
             }
-        })
+        }),
+        after: createAuthMiddleware(async (ctx) => {
+            // 1. Check if the hook was triggered by a signup endpoint
+            if (ctx.path.startsWith("/sign-up")) {
+                console.log("We reached here");
+                
+                // 2. A successful signup creates a new session.
+                //    We can get the new user from this session.
+                const newSession = ctx.context.newSession;
+                console.log(newSession);
+                console.log(newSession?.user);
+                if (newSession && newSession?.user) {
+                const userId = newSession.user.id;
+
+                // 3. Generate a random starting balance
+                const minBalance = 10000;
+                const maxBalance = 50000;
+                const randomBalance = Math.floor(Math.random() * (maxBalance - minBalance + 1)) + minBalance;
+                console.log(randomBalance);
+                // 4. Create the wallet in your database
+                try {
+                    await prisma.wallet.create({
+                    data: {
+                            userId: userId,
+                        balance: randomBalance,
+                    },
+                    });
+                    console.log(`Wallet created for new user ${userId} with balance ${randomBalance}`);
+
+                } catch (error) {
+                    console.error(`Failed to create wallet for user ${userId}:`, error);
+                    // Even if this fails, we don't want to break the user's
+                    // login, so we just log the error.
+                }
+                }
+            }
+        }),
     },
     socialProviders: {
     google: {
