@@ -1,5 +1,3 @@
-// file: src/app/dashboard/page.tsx
-
 import { SignOutButton } from '@/components/sign-out-button';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
