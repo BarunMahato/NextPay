@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+NextPay 💳
+A simple, fast, and secure peer-to-peer (P2P) digital wallet built with modern web technologies. NextPay allows users to create accounts, simulate bank deposits, and transfer funds to other users instantly.
 
-## Getting Started
+🚀 Tech Stack
+Framework: Next.js (App Router)
 
-First, run the development server:
+Database: PostgreSQL
 
+ORM: Prisma
+
+Auth: BetterAuth.js
+
+Styling: TailwindCSS
+
+Monorepo Tool: Turborepo
+
+Containerization: Docker
+
+✨ Features
+User Wallet: View current balance and transaction history.
+
+Add Funds: Simulate depositing money from a bank (OnRamp simulation).
+
+P2P Transfer: Send money to other registered users via phone number.
+
+Merchant View: Dedicated dashboard for merchant transaction analytics.
+
+🛠️ Getting Started
+Follow these steps to run the project locally.
+
+1. Clone the Repositorybash
+git clone https://github.com/BarunMahato/NextPay.git cd NextPay
+
+
+### 2. Install Dependencies
+This project uses a monorepo structure. Run `npm install` at the root to install dependencies for all apps (User App, Merchant App, Backend).
 ```bash
+npm install
+3. Start the Database
+Use Docker to spin up a local PostgreSQL instance.
+
+Bash
+
+docker-compose up -d
+4. Configure Environment Variables
+You need to set up the database connection strings.
+
+Copy .env.example to .env in packages/db.
+
+Copy .env.example to .env in apps/user-app.
+
+Important: Ensure the DATABASE_URL matches your Docker configuration (usually postgresql://postgres:mysecretpassword@localhost:5432/postgres).
+
+5. Initialize Database & Seed Data
+Run the migrations and seed the database with test users (Alice & Bob).
+
+Bash
+
+cd packages/db
+npx prisma migrate dev
+npx prisma db seed
+cd../..
+6. Run the Application
+Start all applications (User App, Merchant App, Webhook Handler) simultaneously.
+
+Bash
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+User App: http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Merchant App: http://localhost:3001
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🧪 Testing Transactions
+Log in with the seed credentials (e.g., Phone: 1111111111, Password: alice).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Go to Transfer to send money to another user.
 
-## Learn More
+To simulate a bank deposit, use the Add Money tab. Note: You may need to trigger the webhook manually or use the provided "Bank Webhook" button if available in the UI to confirm the transaction status from "Processing" to "Success".
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Key Implementation Details
+*   **Monorepo Structure:** The project is divided into `apps` (user-app, merchant-app) and `packages` (db, ui), managed by Turborepo to ensure efficient building and code sharing.[1, 2]
+*   **Database Seeding:** The `npx prisma db seed` command is crucial as it populates the database with initial users like "Alice" and "Bob" and their balances, allowing you to test transfers immediately without manual SQL entry.[3, 4]
+*   **Bank Simulation:** The app includes a "Bank Webhook Handler" to simulate the asynchronous nature of real-world banking APIs (OnRamp), requiring a status update to finalize deposits.
