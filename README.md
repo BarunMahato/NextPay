@@ -38,10 +38,12 @@ This project uses a monorepo structure. Run `npm install` at the root to install
 npm install
 3. Start the Database
 Use Docker to spin up a local PostgreSQL instance.
+```
 
-Bash
+```bash
 
 docker-compose up -d
+```
 4. Configure Environment Variables
 You need to set up the database connection strings.
 
@@ -54,22 +56,25 @@ Important: Ensure the DATABASE_URL matches your Docker configuration (usually po
 5. Initialize Database & Seed Data
 Run the migrations and seed the database with test users (Alice & Bob).
 
-Bash
+```bash
 
 cd packages/db
 npx prisma migrate dev
 npx prisma db seed
 cd../..
+```
+
 6. Run the Application
 Start all applications (User App, Merchant App, Webhook Handler) simultaneously.
 
-Bash
+```bash
 
 npm run dev
 User App: http://localhost:3000
 
 Merchant App: http://localhost:3001
 
+```
 🧪 Testing Transactions
 Log in with the seed credentials (e.g., Phone: 1111111111, Password: alice).
 
