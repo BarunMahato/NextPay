@@ -3,13 +3,17 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
-  const session = await auth.api.getSession(request);
+  const session = await auth.api.getSession({
+    headers: request.headers
+  });
+  
   if (!session?.user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
+  
   const senderId = session.user.id;
-
   const { toEmail, amount } = await request.json();
+
   if (!toEmail || !amount) {
     return NextResponse.json({ error: "Missing email or amount" }, { status: 400 });
   }
@@ -50,6 +54,15 @@ export async function POST(request: Request) {
       await tx.wallet.update({
         where: { userId: recipient.id },
         data: { balance: { increment: transferAmount } },
+      });
+
+      await tx.transaction.create({
+        data: {
+          amount: transferAmount,
+          senderId: senderId,
+          receiverId: recipient.id,
+          timestamp: new Date(), 
+        }
       });
     });
 

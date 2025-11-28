@@ -11,7 +11,7 @@ export default function Navbar() {
         
         {/* This is the 1st item (pushed to the LEFT) */}
         <Link href="/" className="text-2xl font-bold text-indigo-600">
-          MyPayApp
+          NextPay
         </Link>
 
         {/* This is the 2nd item (pushed to the RIGHT) */}

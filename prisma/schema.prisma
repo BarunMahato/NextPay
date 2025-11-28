@@ -28,6 +28,8 @@ model User {
   sessions Session[]
   accounts Account[]
   wallet Wallet?
+  sentTransactions     Transaction[]  @relation("SentTransactions")
+  receivedTransactions Transaction[]  @relation("ReceivedTransactions")
 
   @@map("users")
 }
@@ -90,4 +92,17 @@ model Wallet {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  amount    Int
+  timestamp DateTime @default(now())
+  
+  // Relations to User
+  senderId  String
+  sender    User     @relation("SentTransactions", fields: [senderId], references: [id])
+  
+  receiverId String
+  receiver   User     @relation("ReceivedTransactions", fields: [receiverId], references: [id])
 }
