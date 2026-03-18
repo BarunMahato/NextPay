@@ -16,12 +16,12 @@
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** Next.js 15 (App Router), Tailwind CSS, Shadcn UI
+* **Frontend:** Next.js 15 (App Router), Tailwind CSS
 * **Backend:** Node.js, Next.js Server Actions, Route Handlers
 * **Database:** PostgreSQL (via Prisma ORM)
 * **Auth:** Better Auth (with Prisma Adapter and Next.js Plugins)
 * **Security:** Argon2 for password hashing, TypeScript for end-to-end type safety
-* **Email:** Custom `send-email` actions (Integrated with Resend/Nodemailer)
+* **Email:** Custom `send-email` actions (Integrated with Nodemailer)
 
 ---
 
@@ -33,7 +33,7 @@ NextPay utilizes Prisma’s `$transaction` API to ensure that when money is sent
 ### 2. Event-Driven Onboarding
 Using Better Auth's `after` hooks, the system intercepts successful signups to trigger secondary processes like wallet creation and balance seeding.
 
-```typescript
+<pre>
 // Example logic from auth.ts
 after: createAuthMiddleware(async (ctx) => {
     if (ctx.path.startsWith("/sign-up")) {
@@ -46,3 +46,52 @@ after: createAuthMiddleware(async (ctx) => {
         });
     }
 })
+</pre>
+
+## ⚙️ Local Setup
+
+### 1.  Clone the setup
+
+<pre>
+git clone https://github.com/BarunMahato/NextPay
+cd next-pay
+</pre>
+
+### 2. Install Dependencies:
+
+<pre>
+npm install
+</pre>
+
+### 3. Environment variables
+
+Create a .env file in the root directory
+
+<pre>
+DATABASE_URL="your_postgres_url"
+BETTER_AUTH_SECRET="your_secret"
+BETTER_AUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_API_URL="http://localhost:3000"
+GOOGLE_CLIENT_ID="your_google_id"
+GOOGLE_CLIENT_SECRET="your_google_secret"
+NODEMAILER_USER="gmail"
+NODEMAILER_APP_PASSWORD="passkey"
+NODE_ENV = "production" //Once you deploy the code implement it
+</pre>
+
+### 4. Database Migration:
+
+<pre>
+npx prisma migrate dev
+</pre>
+
+### 5. Run Development Server:
+
+<pre>
+npm run dev
+</pre>
+
+🛡️ License
+Distributed under the MIT License. See LICENSE for more information.
+
+Developed by Barun Mahato Computer Engineering Student @ Jain (Deemed-to-be University)
