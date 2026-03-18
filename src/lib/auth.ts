@@ -87,13 +87,10 @@ export const auth = betterAuth({
         after: createAuthMiddleware(async (ctx) => {
             // 1. Check if the hook was triggered by a signup endpoint
             if (ctx.path.startsWith("/sign-up")) {
-                console.log("We reached here");
                 
                 // 2. A successful signup creates a new session.
                 //    We can get the new user from this session.
                 const newSession = ctx.context.newSession;
-                console.log(newSession);
-                console.log(newSession?.user);
                 if (newSession && newSession?.user) {
                 const userId = newSession.user.id;
 
