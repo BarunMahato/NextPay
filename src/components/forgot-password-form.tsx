@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast"; 
-import { forgetPassword } from "../lib/auth-client"; 
+import { requestPasswordReset } from "../lib/auth-client"; 
 
 export const ForgotPasswordForm = () => {
   const [isPending, setIsPending] = useState(false);
@@ -16,7 +16,7 @@ export const ForgotPasswordForm = () => {
 
     if (!email) return toast.error("Please enter your email.");
 
-    await forgetPassword({
+    await requestPasswordReset({
       email,
       redirectTo: "/auth/reset-password",
       fetchOptions: {
