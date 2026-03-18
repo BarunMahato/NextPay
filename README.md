@@ -1,89 +1,48 @@
-NextPay 💳
-A simple, fast, and secure peer-to-peer (P2P) digital wallet built with modern web technologies. NextPay allows users to create accounts, simulate bank deposits, and transfer funds to other users instantly.
+# NextPay 💸
 
-🚀 Tech Stack
-Framework: Next.js (App Router)
+**NextPay** is a high-performance, full-stack Peer-to-Peer (P2P) payment application designed for secure and instant financial transfers. Built with a modern tech stack, it features robust authentication, atomic database transactions, and automated wallet initialization.
 
-Database: PostgreSQL
+---
 
-ORM: Prisma
+## 🚀 Key Features
 
-Auth: BetterAuth.js
+* **Secure P2P Transfers:** Atomic database transactions ensure data integrity—money is never lost or duplicated during transfers.
+* **Automated Wallet System:** New users are automatically provisioned a wallet with a randomized starting balance (₹10,000 - ₹50,000) via custom **Better Auth hooks**.
+* **Robust Authentication:** Implemented **Better Auth** with Email/Password and Google OAuth, featuring secure **Argon2** password hashing.
+* **Email Verification:** Automated onboarding flow with custom-styled email templates for account verification and password resets.
+* **Server-Side Security:** Middleware-protected routes and centralized API error handling for high-reliability financial operations.
 
-Styling: TailwindCSS
+---
 
-Monorepo Tool: Turborepo
+## 🛠️ Tech Stack
 
-Containerization: Docker
+* **Frontend:** Next.js 15 (App Router), Tailwind CSS, Shadcn UI
+* **Backend:** Node.js, Next.js Server Actions, Route Handlers
+* **Database:** PostgreSQL (via Prisma ORM)
+* **Auth:** Better Auth (with Prisma Adapter and Next.js Plugins)
+* **Security:** Argon2 for password hashing, TypeScript for end-to-end type safety
+* **Email:** Custom `send-email` actions (Integrated with Resend/Nodemailer)
 
-✨ Features
-User Wallet: View current balance and transaction history.
+---
 
-Add Funds: Simulate depositing money from a bank (OnRamp simulation).
+## 🏗️ Architecture Highlights
 
-P2P Transfer: Send money to other registered users via phone number.
+### 1. Transaction Integrity
+NextPay utilizes Prisma’s `$transaction` API to ensure that when money is sent, both the sender's debit and the receiver's credit happen simultaneously or not at all—preventing "ghost money" errors.
 
-Merchant View: Dedicated dashboard for merchant transaction analytics.
+### 2. Event-Driven Onboarding
+Using Better Auth's `after` hooks, the system intercepts successful signups to trigger secondary processes like wallet creation and balance seeding.
 
-🛠️ Getting Started
-Follow these steps to run the project locally.
-
-1. Clone the Repositorybash
-git clone https://github.com/BarunMahato/NextPay.git cd NextPay
-
-
-### 2. Install Dependencies
-This project uses a monorepo structure. Run `npm install` at the root to install dependencies for all apps (User App, Merchant App, Backend).
-```bash
-npm install
-3. Start the Database
-Use Docker to spin up a local PostgreSQL instance.
-```
-
-```bash
-
-docker-compose up -d
-```
-4. Configure Environment Variables
-You need to set up the database connection strings.
-
-Copy .env.example to .env in packages/db.
-
-Copy .env.example to .env in apps/user-app.
-
-Important: Ensure the DATABASE_URL matches your Docker configuration (usually postgresql://postgres:mysecretpassword@localhost:5432/postgres).
-
-5. Initialize Database & Seed Data
-Run the migrations and seed the database with test users (Alice & Bob).
-
-```bash
-
-cd packages/db
-npx prisma migrate dev
-npx prisma db seed
-cd../..
-```
-
-6. Run the Application
-Start all applications (User App, Merchant App, Webhook Handler) simultaneously.
-
-```bash
-
-npm run dev
-User App: http://localhost:3000
-
-Merchant App: http://localhost:3001
-
-```
-🧪 Testing Transactions
-Log in with the seed credentials (e.g., Phone: 1111111111, Password: alice).
-
-Go to Transfer to send money to another user.
-
-To simulate a bank deposit, use the Add Money tab. Note: You may need to trigger the webhook manually or use the provided "Bank Webhook" button if available in the UI to confirm the transaction status from "Processing" to "Success".
-
-
-### Key Implementation Details
-*   **Monorepo Structure:** The project is divided into `apps` (user-app, merchant-app) and `packages` (db, ui), managed by Turborepo to ensure efficient building and code sharing.[1, 2]
-*   **Database Seeding:** The `npx prisma db seed` command is crucial as it populates the database with initial users like "Alice" and "Bob" and their balances, allowing you to test transfers immediately without manual SQL entry.[3, 4]
-*   **Bank Simulation:** The app includes a "Bank Webhook Handler" to simulate the asynchronous nature of real-world banking APIs (OnRamp), requiring a status update to finalize deposits.
+```typescript
+// Example logic from auth.ts
+after: createAuthMiddleware(async (ctx) => {
+    if (ctx.path.startsWith("/sign-up")) {
+        const userId = ctx.context.newSession.user.id;
+        await prisma.wallet.create({
+            data: { 
+                userId: userId, 
+                balance: randomBalance 
+            }
+        });
+    }
+})
