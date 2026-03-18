@@ -12,45 +12,55 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
     provider: "postgresql",
     }),
-     emailVerification: {
-    sendOnSignUp: true,
-    expiresIn: 60 * 60,
-    autoSignInAfterVerification: true,
-    sendVerificationEmail: async ({ user, url }) => {
-      const link = new URL(url);
-      link.searchParams.set("callbackURL", "/auth/verify");
-
-      await sendEmailAction({
-        to: user.email,
-        subject: "Verify your email address",
-        meta: {
-          description:
-            "Please verify your email address to complete the registration process.",
-          link: String(link),
+    emailVerification:{
+        sendOnSignUp: true,
+        expiresIn: 60 * 60,
+        autoSignInAfterVerification: true,
+        sendVerificationEmail: async ({ user, url }) => {
+            const link = new URL(url);
+            link.searchParams.set("callbackURL", "/auth/verify");
+            await sendEmailAction({
+                to: user.email,
+                subject: "Action Required: Verify Your NextPay Account",
+                meta: {
+                    description: `Welcome to NextPay! We're excited to have you. To complete your account setup and ensure it's secure, please verify your email address by clicking the button below.
+                    <br/><br/>
+                    This verification link is valid for the next 1 hours.
+                    <br/><br/>
+                    If you did not sign up for NextPay, please safely ignore this email.`,
+                    link: String(link),
+                    linkText: "Verify My Email Address"
+                },
+            });
+        }
+    },
+    emailAndPassword: {
+        enabled: true,
+        minPasswordLength: 6,
+        autoSignIn: false,
+        password: {
+        hash: hashPassword,
+        verify: verifyPassword,
         },
-      });
+        requireEmailVerification: true,
+        sendResetPassword: async ({ user, url }) => {
+        await sendEmailAction({
+            to: user.email,
+            subject: "Action Required: Reset Your NextPay Password",
+            meta: {
+                description: `Hello,
+                <br/><br/>
+                We received a request to reset the password for your NextPay account. If this was you, please click the button below to set a new password.
+                <br/><br/>
+                This password reset link is valid for the next 1 hour.
+                <br/><br/>
+                If you did not request a password reset, please safely ignore this email. Your password will not be changed.`,
+                link: String(url),
+                linkText: "Reset My Password"
+            },
+        });
+},
     },
-  },
-  emailAndPassword: {
-    enabled: true,
-    minPasswordLength: 6,
-    autoSignIn: false,
-    password: {
-      hash: hashPassword,
-      verify: verifyPassword,
-    },
-    requireEmailVerification: true,
-    sendResetPassword: async ({ user, url }) => {
-      await sendEmailAction({
-        to: user.email,
-        subject: "Reset your password",
-        meta: {
-          description: "Please click the link below to reset your password.",
-          link: String(url),
-        },
-      });
-    },
-  },
     
     session: {
         expiresIn: 60 * 30,
